@@ -53,13 +53,30 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  BannerAd? _ad;
+  late BannerAd _ad;
   bool _isAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    log("MyHomePage initState");
+    _ad = BannerAd(
+      adUnitId: bannerAdUnitId,
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          // Releases an ad resource when it fails to load
+          ad.dispose();
+          print('Ad load failed (code=${error.code} message=${error.message})');
+        },
+      ),
+    );
+    _ad.load();
   }
 
   static String get bannerAdUnitId {
@@ -80,7 +97,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
-    _ad?.load();
   }
 
   @override
@@ -91,29 +107,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    if (_ad == null) {
-      _ad = BannerAd(
-        adUnitId: bannerAdUnitId,
-        size: AdSize.banner,
-        request: AdRequest(),
-        listener: BannerAdListener(
-          onAdLoaded: (_) {
-            setState(() {
-              _isAdLoaded = true;
-            });
-          },
-          onAdFailedToLoad: (ad, error) {
-            // Releases an ad resource when it fails to load
-            ad.dispose();
-
-            print(
-                'Ad load failed (code=${error.code} message=${error.message})');
-          },
-        ),
-      );
-
-      _ad?.load();
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -167,9 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    // TODO: Dispose a BannerAd object
-    _ad?.dispose();
-
+    _ad.dispose();
     super.dispose();
   }
 }
