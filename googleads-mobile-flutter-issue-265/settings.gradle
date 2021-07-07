@@ -1,0 +1,7 @@
+rootProject.name = "Googleads-mobile-flutter-issue-265"
+include ':app'
+setBinding(new Binding([gradle: this]))
+evaluate(new File(
+  settingsDir,
+  '../flutter_ads_issue_265/.android/include_flutter.groovy'
+))
