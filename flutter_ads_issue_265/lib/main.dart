@@ -135,8 +135,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              child: AdWidget(ad: _ad!),
-              width: _ad?.size.width.toDouble(),
+              child: AdWidget(ad: _ad),
+              width: _ad.size.width.toDouble(),
               height: 72.0,
               alignment: Alignment.center,
             ),
